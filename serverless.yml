@@ -1,5 +1,4 @@
-service:
-  name: sls-ton-api
+service: sls-ton-api
 
 plugins:
   - serverless-bundle
@@ -9,12 +8,49 @@ provider:
   name: aws
   runtime: nodejs12.x
   memorySize: 256
+  region: eu-west-1
+  environment:
+    USERS_TABLE_NAME: ${self:custom.UsersTable.name}
+  iam:
+    role:
+      statements:
+        - ${file(iam/UsersTableIAM.yml):UsersTableIAM}
   stage: ${opt:stage, 'dev'}
-  
+
+resources:
+  Resources:
+    UsersTable: ${file(resources/UsersTable.yml):UsersTable}
+
 functions:
-  hello:
-    handler: src/handlers/hello.handler
+  createUser:
+    handler: src/handlers/user/create.handler
+    events:
+      - http:
+          method: POST
+          path: /user
+
+  getUser:
+    handler: src/handlers/user/get.handler
     events:
       - http:
           method: GET
-          path: /hello
+          path: /user/{id}
+
+  # getAccess:
+  #   handler: src/handlers/access/get.handler
+  #   events:
+  #     - http:
+  #         method: GET
+  #         path: /access
+
+  # increaseAccess:
+  #   handler: src/handlers/access/increase.handler
+  #   events:
+  #     - http:
+  #         method: PATCH
+  #         path: /access
+
+custom:
+  UsersTable:
+    name: !Ref UsersTable
+    arn: !GetAtt UsersTable.Arn
