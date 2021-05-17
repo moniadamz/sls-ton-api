@@ -4,7 +4,7 @@ import createError from 'http-errors';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-export async function getUserById(id) {
+export const getUserById = async (id) => {
   let user;
 
   try {
@@ -24,9 +24,9 @@ export async function getUserById(id) {
   }
 
   return user;
-}
+};
 
-async function getUser(event, context) {
+const getUser = async (event, context) => {
   const { id } = event.pathParameters;
   const user = await getUserById(id);
 
@@ -34,6 +34,6 @@ async function getUser(event, context) {
     statusCode: 200,
     body: JSON.stringify(user),
   };
-}
+};
 
 export const handler = commonMiddleware(getUser);

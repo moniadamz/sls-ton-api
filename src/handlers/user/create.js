@@ -6,7 +6,7 @@ import userSchema from "../../lib/schemas/createUserSchema";
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-async function createUser(event, context) {
+const createUser = async (event, context) => {
   try {
     const validate = userSchema.validate(event.body);
     if (validate.error) throw validate.error;
@@ -41,6 +41,6 @@ async function createUser(event, context) {
     statusCode: 201,
     body: JSON.stringify(user),
   };
-}
+};
 
 export const handler = commonMiddleware(createUser);

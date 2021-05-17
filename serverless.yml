@@ -11,6 +11,9 @@ provider:
   region: eu-west-1
   environment:
     USERS_TABLE_NAME: ${self:custom.UsersTable.name}
+    COUNT_API_URL: https://api.countapi.xyz
+    NAMESPACE: ton.com.br
+    KEY: visits
   iam:
     role:
       statements:
@@ -36,19 +39,19 @@ functions:
           method: GET
           path: /user/{id}
 
-  # getAccess:
-  #   handler: src/handlers/access/get.handler
-  #   events:
-  #     - http:
-  #         method: GET
-  #         path: /access
+  getAccess:
+    handler: src/handlers/access/get.handler
+    events:
+      - http:
+          method: GET
+          path: /access
 
-  # increaseAccess:
-  #   handler: src/handlers/access/increase.handler
-  #   events:
-  #     - http:
-  #         method: PATCH
-  #         path: /access
+  increaseAccess:
+    handler: src/handlers/access/increase.handler
+    events:
+      - http:
+          method: POST
+          path: /access
 
 custom:
   UsersTable:
