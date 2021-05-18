@@ -7,3 +7,8 @@ export const increaseNumberOfAccesses = async () => {
   return getRequest(endpoint);
 };
 
+export const getNumberOfAccesses = async (event, context) => {
+  const endpoint = `${COUNT_API_URL}/get/${NAMESPACE}/${KEY}`;
+  return getRequest(endpoint);
+};
+

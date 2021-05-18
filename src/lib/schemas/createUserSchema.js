@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import createError from "http-errors";
 
 const schema = Joi.object({
   login: Joi.string().required(),
@@ -6,4 +7,13 @@ const schema = Joi.object({
   name: Joi.string(),
 }).required();
 
-export default schema;
+const validate = async (body) => {
+  try {
+    const validate = schema.validate(body);
+    if (validate.error) throw validate.error;
+  } catch (err) {
+    throw new createError.UnprocessableEntity(err);
+  }
+};
+
+export const validateSchema = validate;

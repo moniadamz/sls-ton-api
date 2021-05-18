@@ -1,8 +1,8 @@
 import createError from "http-errors";
-import  { getNumberOfAccesses } from "../../services/getAccess";
+import { getNumberOfAccesses } from "../../services/access";
 import commonMiddleware from "../../lib/commonMiddleware";
 
-const getAccesses = async (event, context) => {
+const getAccesses = async () => {
   try {
     const response = await getNumberOfAccesses();
     return {
@@ -10,7 +10,8 @@ const getAccesses = async (event, context) => {
       body: JSON.stringify(response),
     };
   } catch (error) {
-      throw new createError.InternalServerError(error);
+    console.log(error);
+    throw new createError.InternalServerError(error.errorMessage);
   }
 };
 

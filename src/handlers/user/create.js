@@ -1,18 +1,11 @@
 import { v4 as uuid } from "uuid";
-import AWS from "aws-sdk";
 import createError from "http-errors";
 import commonMiddleware from "../../lib/commonMiddleware";
-import userSchema from "../../lib/schemas/createUserSchema";
-
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+import { validateSchema } from '../../lib/schemas/createUserSchema';
+import { service } from "../../services/user";
 
 const createUser = async (event, context) => {
-  try {
-    const validate = userSchema.validate(event.body);
-    if (validate.error) throw validate.error;
-  } catch (err) {
-    throw new createError.UnprocessableEntity(err);
-  }
+  await validateSchema(event.body);
 
   const { login, password, name } = event.body;
 
@@ -27,14 +20,10 @@ const createUser = async (event, context) => {
   };
 
   try {
-    await dynamodb
-      .put({
-        TableName: process.env.USERS_TABLE_NAME,
-        Item: user,
-      })
-      .promise();
+    await service.insertUser(user);
   } catch (error) {
-    throw new createError.InternalServerError(error);
+    console.log(error);
+    throw new createError.InternalServerError(error.errorMessage);
   }
 
   return {

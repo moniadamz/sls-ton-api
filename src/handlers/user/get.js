@@ -1,22 +1,17 @@
-import AWS from 'aws-sdk';
-import commonMiddleware from '../../lib/commonMiddleware';
-import createError from 'http-errors';
-
-const dynamodb = new AWS.DynamoDB.DocumentClient();
+import commonMiddleware from "../../lib/commonMiddleware";
+import createError from "http-errors";
+import { service } from "../../services/user";
 
 export const getUserById = async (id) => {
   let user;
 
   try {
-    const result = await dynamodb.get({
-      TableName: process.env.USERS_TABLE_NAME,
-      Key: { id },
-    }).promise();
+    const result = await service.getUserById(id);
 
     user = result.Item;
   } catch (error) {
     console.error(error);
-    throw new createError.InternalServerError(error);
+    throw new createError.InternalServerError(error.errorMessage);
   }
 
   if (!user) {
@@ -26,10 +21,9 @@ export const getUserById = async (id) => {
   return user;
 };
 
-const getUser = async (event, context) => {
+export const getUser = async (event, context) => {
   const { id } = event.pathParameters;
   const user = await getUserById(id);
-
   return {
     statusCode: 200,
     body: JSON.stringify(user),
