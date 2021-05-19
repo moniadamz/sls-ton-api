@@ -17,7 +17,7 @@ const createUser = async (event) => {
         id: uuid(),
         name,
         login,
-        password,
+        password: service.encryptPassword(password),
         createdAt: now.toISOString(),
       };
 
