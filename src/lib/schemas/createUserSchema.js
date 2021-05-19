@@ -1,18 +1,17 @@
-import Joi from 'joi';
-import createError from "http-errors";
+import Joi from "joi";
 
 const schema = Joi.object({
-  login: Joi.string().required(),
-  password: Joi.string().required(),
-  name: Joi.string(),
+  login: Joi.string().min(1).max(10).required(),
+  password: Joi.string().min(6).max(16).required(),
+  name: Joi.string().min(3).max(50).required(),
 }).required();
 
 const validate = async (body) => {
   try {
     const validate = schema.validate(body);
     if (validate.error) throw validate.error;
-  } catch (err) {
-    throw new createError.UnprocessableEntity(err);
+  } catch (error) {
+    throw error.details[0].message;
   }
 };
 

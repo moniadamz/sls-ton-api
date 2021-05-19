@@ -1,33 +1,24 @@
 import commonMiddleware from "../../lib/commonMiddleware";
-import createError from "http-errors";
 import { service } from "../../services/user";
-
+import { formatResponse } from "../../lib/formatResponse";
 export const getUserById = async (id) => {
-  let user;
+  const result = await service.getUserById(id);
 
-  try {
-    const result = await service.getUserById(id);
+  const user = result.Item;
 
-    user = result.Item;
-  } catch (error) {
-    console.error(error);
-    throw new createError.InternalServerError(error.errorMessage);
-  }
-
-  if (!user) {
-    throw new createError.NotFound(`User with ID "${id}" not found!`);
-  }
-
+  if (!user) throw `User with ID "${id}" not found!`;
   return user;
 };
 
-export const getUser = async (event, context) => {
+export const getUser = async (event) => {
   const { id } = event.pathParameters;
-  const user = await getUserById(id);
-  return {
-    statusCode: 200,
-    body: JSON.stringify(user),
-  };
+  try {
+    const user = await getUserById(id);
+
+    return formatResponse(200, user);
+  } catch (error) {
+    return formatResponse(404, { error });
+  }
 };
 
 export const handler = commonMiddleware(getUser);

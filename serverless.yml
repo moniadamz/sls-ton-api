@@ -30,14 +30,14 @@ functions:
     events:
       - http:
           method: POST
-          path: /user
+          path: /users
 
   getUser:
     handler: src/handlers/user/get.handler
     events:
       - http:
           method: GET
-          path: /user/{id}
+          path: /users/{id}
 
   getAccess:
     handler: src/handlers/access/get.handler

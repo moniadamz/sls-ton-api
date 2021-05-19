@@ -6,6 +6,15 @@ UsersTable:
     AttributeDefinitions:
       - AttributeName: id
         AttributeType: S
+      - AttributeName: login
+        AttributeType: S
     KeySchema:
       - AttributeName: id
         KeyType: HASH
+    GlobalSecondaryIndexes:
+      - IndexName: login
+        KeySchema:
+          - AttributeName: login
+            KeyType: HASH
+        Projection:
+          ProjectionType: ALL

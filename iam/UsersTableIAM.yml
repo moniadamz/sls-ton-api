@@ -3,5 +3,7 @@ UsersTableIAM:
   Action:
     - dynamodb:PutItem
     - dynamodb:GetItem
+    - dynamodb:Query
   Resource:
     - ${self:custom.UsersTable.arn}
+    - !Join ['/', [ '${self:custom.UsersTable.arn}', 'index', 'login' ]]

@@ -1,17 +1,12 @@
-import createError from "http-errors";
 import { increaseNumberOfAccesses } from "../../services/access";
 import commonMiddleware from "../../lib/commonMiddleware";
-
-const increaseAccess = async (event, context) => {
+import { formatResponse } from "../../lib/formatResponse";
+const increaseAccess = async () => {
   try {
     const response = await increaseNumberOfAccesses();
-    return {
-      statusCode: 200,
-      body: JSON.stringify(response),
-    };
+    return formatResponse(200, response);
   } catch (error) {
-    console.log(error);
-    throw new createError.InternalServerError(error.errorMessage);
+    return formatResponse(400, { error: error.errorMessage || error });
   }
 };
 
