@@ -2,6 +2,8 @@
 
 API Serverless que cria um usuário e conta o número de acessos ao site do [Ton](https://ton.com.br), utilizando serviços AWS e IaC.
 
+Esse projeto teve o início baseado no template disponível em https://github.com/codingly-io/sls-base. 
+
 ## Tecnologias:
 
 - NodeJS v12.18.4, DynamoDB, Serverless v2.41.2, Bcrypt v2.4.3
@@ -32,7 +34,7 @@ Body:
 
 | Campo         | Tipo  | Descrição  | Obrigatório |
 | ------------- |-------------| ------------ |:---------: |
-| nome | String | de 3 à 50 caracteres | ✔ |
+| name | String | de 3 à 50 caracteres | ✔ |
 | password | String | de 6 à 16 caracteres | ✔ |
 | login | String | de 1 à 10 caracteres | ✔ |
 
